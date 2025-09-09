@@ -3,84 +3,217 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nombre del Proyecto — Próximamente</title>
-  <meta name="description" content="Solución en desarrollo para X. Beta privada abierta." />
+  <title>AutoVid Generator — Próximamente</title>
+  <meta name="description" content="AutoVid Generator automatiza la creación de videos personalizados con IA, integrando Google Sheets, Gemini, Pexels y FFmpeg. ¡Regístrate para la beta!" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#0b0d10;--fg:#e8eef5;--muted:#9fb0c3;--card:#12161b;--acc:#52a8ff}
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Segoe UI,sans-serif;background:linear-gradient(180deg,#0b0d10, #0e141a);}
-    .wrap{max-width:980px;margin:0 auto;padding:48px 24px}
-    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px;color:var(--fg)}
-    header .brand{font-weight:800;letter-spacing:.5px}
-    .card{background:var(--card);border:1px solid #1c232b;border-radius:16px;padding:32px;color:var(--fg);box-shadow:0 10px 30px rgba(0,0,0,.25)}
-    h1{margin:0 0 12px;font-size:36px}
-    p{color:var(--muted);line-height:1.6}
-    .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
-    .pill{display:inline-block;background:#0b6dd6;color:white;border-radius:999px;padding:6px 12px;font-size:12px;letter-spacing:.4px}
-    .cta{display:inline-flex;align-items:center;gap:10px;background:var(--acc);color:#0a0f14;border:0;border-radius:12px;padding:14px 18px;font-weight:700;text-decoration:none;margin-top:18px}
-    .cta:hover{filter:saturate(1.1) brightness(1.02)}
-    footer{margin-top:40px;color:#73839a;font-size:12px}
-    .muted{color:#8ea0b8}
-    .section{margin-top:28px}
-    .kpis{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
-    .kpi{background:#0f141a;border:1px solid #1c232b;border-radius:12px;padding:12px 14px;color:#c9d7e6}
-    @media (max-width:520px){h1{font-size:28px}}
+    :root {
+      --bg: #0b0d10;
+      --fg: #e8eef5;
+      --muted: #9fb0c3;
+      --card: #12161b;
+      --acc: #52a8ff;
+      --disabled: #4b5a6e;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, Segoe UI, sans-serif;
+      background: linear-gradient(180deg, #0b0d10, #0e141a);
+      color: var(--fg);
+    }
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 64px 24px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 56px;
+    }
+    header .brand {
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, var(--acc), #7bbcff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid #1c232b;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    h1 {
+      margin: 0 0 16px;
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 12px;
+    }
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    .grid {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      margin-top: 32px;
+    }
+    .pill {
+      display: inline-block;
+      background: #0b6dd6;
+      color: white;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .cta {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: var(--disabled);
+      color: #8ea0b8;
+      border: 0;
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      margin-top: 24px;
+      cursor: not-allowed;
+    }
+    .cta span {
+      font-size: 12px;
+      font-weight: 400;
+      color: #9fb0c3;
+    }
+    footer {
+      margin-top: 48px;
+      color: #73839a;
+      font-size: 13px;
+      text-align: center;
+    }
+    .privacy-policy {
+      margin-top: 16px;
+      color: #73839a;
+      font-size: 12px;
+      line-height: 1.6;
+      text-align: center;
+    }
+    .privacy-policy a {
+      color: #73839a;
+      text-decoration: none;
+    }
+    .muted {
+      color: #8ea0b8;
+    }
+    .section {
+      margin-top: 32px;
+    }
+    .kpis {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .kpi {
+      background: #0f141a;
+      border: 1px solid #1c232b;
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: #c9d7e6;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    @media (max-width: 520px) {
+      h1 {
+        font-size: 32px;
+      }
+      .card {
+        padding: 24px;
+      }
+      .wrap {
+        padding: 32px 16px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">NombreDelProyecto</div>
-      <span class="pill">En desarrollo</span>
+      <div class="brand">AutoVid Generator</div>
+      <span class="pill">En Alpha</span>
     </header>
 
     <main class="card">
-      <h1>Tu propuesta en una frase clara</h1>
-      <p class="muted">Ej.: “Automatizamos <strong>X</strong> para <strong>Y</strong> en <strong>Z</strong> minutos, sin código”.</p>
+      <h1>Crea videos personalizados en minutos con automatización</h1>
+      <p class="muted">AutoVid Generator transforma tus datos en videos dinámicos usando <strong>Google Sheets</strong>, <strong>Gemini</strong>, <strong>Pexels</strong> y <strong>FFmpeg</strong>, simplificando la creación de contenido y desatando tu creatividad.</p>
 
       <div class="section">
-        <h3>Qué problema resolvemos</h3>
-        <p>Contexto breve del dolor del usuario y por qué las soluciones actuales no alcanzan.</p>
+        <h3>El problema que resolvemos</h3>
+        <p>La creación manual de videos es lenta, requiere habilidades técnicas avanzadas y puede limitar la creatividad. Las herramientas actuales son complejas, costosas o no permiten personalización automatizada a gran escala.</p>
       </div>
 
       <div class="section grid">
         <div>
-          <h3>Solución (MVP)</h3>
-          <p>Funcionalidades clave del MVP + foco técnico (stack, integraciones).</p>
+          <h3>Nuestra solución (MVP)</h3>
+          <p>AutoVid Generator automatiza la creación de videos: extrae datos de Google Sheets, genera contenido con IA (Gemini, DeepL), produce audio con texto a voz, obtiene recursos visuales de Pexels y procesa videos con FFmpeg para resultados profesionales.</p>
         </div>
         <div>
           <h3>Estado actual</h3>
-          <p>Roadmap corto: Alpha → Beta cerrada → Beta pública. Link a changelog/preview si aplica.</p>
+          <p>Estamos en fase alpha, desarrollando la lógica central. La beta cerrada llegará en Q1 2026. Regístrate para recibir actualizaciones sobre nuestro progreso.</p>
         </div>
         <div>
-          <h3>Equipo</h3>
-          <p>Quiénes son, experiencia relevante (breve).</p>
+          <h3>Nuestro equipo</h3>
+          <p>Un equipo apasionado por la automatización y la IA, con experiencia en flujos de trabajo (n8n), integración de APIs y producción multimedia.</p>
         </div>
       </div>
 
       <div class="kpis">
-        <div class="kpi">Beta list: <strong>abierta</strong></div>
-        <div class="kpi">Tiempo ahorro: <strong>~X%</strong></div>
-        <div class="kpi">Integraciones: <strong>A • B • C</strong></div>
+        <div class="kpi">Beta: <strong>Registro anticipado cerrado</strong></div>
+        <div class="kpi">Ahorro de tiempo: <strong>~90%</strong></div>
+        <div class="kpi">Integraciones: <strong>Sheets, Gemini, Pexels, FFmpeg + más</strong></div>
       </div>
 
-      <!-- CTA: elegí uno -->
-      <!-- Opción 1: correo -->
-      <a class="cta" href="mailto:info@tudominio.com?subject=Quiero%20sumarme%20a%20la%20beta">Unirme a la beta →</a>
-      <!-- Opción 2: Google Form -->
-      <!-- <a class="cta" href="https://forms.gle/TU_FORM" target="_blank" rel="noopener">Unirme a la beta →</a> -->
+      <a class="cta" href="#" disabled>Únete a la beta <span>Próximamente</span></a>
 
       <div class="section">
-        <p class="muted">© <span id="y"></span> Tu Startup — Todos los derechos reservados.</p>
+        <p class="muted">© <span id="y"></span> AutoVid Generator — Todos los derechos reservados.</p>
       </div>
     </main>
 
     <footer>
-      <div>Política de privacidad mínima y email de contacto.</div>
+      <div><a href="mailto:info@autovidgenerator.com" style="color: #73839a; text-decoration: none;">info@autovidgenerator.com</a></div>
     </footer>
+
+    <div class="privacy-policy">
+      <p>Política de Privacidad: En AutoVid Generator, protegemos tus datos personales. Solo recopilamos información proporcionada voluntariamente (como correos electrónicos para la beta) y no la compartimos con terceros. Contáctanos en <a href="mailto:info@autovidgenerator.com">info@autovidgenerator.com</a> para más detalles.</p>
+    </div>
   </div>
 
-  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+  <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
 </body>
 </html>
