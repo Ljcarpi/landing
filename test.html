@@ -87,19 +87,22 @@
                 }
 
                 const data = await response.json();
-                const ytUrl = data.link_yt;  // Updated to match new JSON structure { "link_yt": "url" }
+                const ytUrl = data.link_yt;
 
                 if (!ytUrl) {
                     throw new Error('No se encontró la URL del video en la respuesta.');
                 }
 
-                const videoId = ytUrl.split('/').pop();
-                document.getElementById('yt-embed').src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`;
-                document.getElementById('yt-link').href = ytUrl;
-                document.getElementById('yt-link').textContent = 'ver en YouTube';
+                // Wait 15 seconds before loading the video to allow YouTube processing
+                setTimeout(() => {
+                    const videoId = ytUrl.split('/').pop();
+                    document.getElementById('yt-embed').src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`;
+                    document.getElementById('yt-link').href = ytUrl;
+                    document.getElementById('yt-link').textContent = 'ver en YouTube';
 
-                document.querySelector('.loading').style.display = 'none';
-                document.querySelector('.embed').style.display = 'block';
+                    document.querySelector('.loading').style.display = 'none';
+                    document.querySelector('.embed').style.display = 'block';
+                }, 15000); // 15 seconds delay
             } catch (error) {
                 console.error('Error:', error);
                 alert('Hubo un error al generar el video: ' + error.message);
