@@ -3,106 +3,207 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Test Workflow — n8n + GitHub Pages</title>
+  <title>Generación de video — YouTube Preview</title>
   <style>
     :root { color-scheme: light dark; }
-    body {
-      margin:0; min-height:100dvh; display:grid; place-items:center;
+    body { margin:0; min-height:100dvh; display:grid; place-items:center;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-      background:#0b0d10; color:#e8eef5;
-    }
-    .card {
-      width:min(720px, 92vw); padding:28px; border-radius:20px;
-      background:#12161b; box-shadow:0 10px 30px rgba(0,0,0,.4);
-      display:flex; flex-direction:column; gap:16px; text-align:center;
-    }
-    h1 { margin:0; font-size:clamp(20px, 3.2vw, 28px); }
-    label { font-weight:600; text-align:left; }
+      background:#0b0d10; color:#e8eef5; }
+    .card { width:min(880px,95vw); padding:26px; border-radius:20px; background:#12161b;
+      box-shadow:0 10px 30px rgba(0,0,0,.4); display:flex; flex-direction:column; gap:16px; }
+    h1 { margin:0 0 6px; font-size:clamp(20px,3.2vw,28px); }
+    p { margin:0; opacity:.9 }
     .row { display:flex; gap:10px; align-items:center; }
-    input[type="text"]{
-      flex:1; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
-      background:#0c1116; color:#cbe4ff; outline:none;
-    }
-    button {
-      all:unset; cursor:pointer; padding:12px 18px; border-radius:12px;
-      font-weight:700; font-size:15px; white-space:nowrap;
-      background:linear-gradient(135deg, #6f7bf7, #8b5cf6, #14b8a6); color:#fff;
-      box-shadow:0 6px 20px rgba(79,70,229,.35);
-      transition: transform .08s ease, filter .15s ease;
-    }
-    button:hover { filter:brightness(1.08); }
-    button:active { transform: translateY(1px) scale(.99); }
+    input[type="text"]{ flex:1; padding:12px 14px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.08); background:#0c1116; color:#cbe4ff; outline:none; }
+    button { all:unset; cursor:pointer; padding:12px 18px; border-radius:12px; font-weight:700;
+      background:linear-gradient(135deg,#6f7bf7,#8b5cf6,#14b8a6); color:#fff;
+      box-shadow:0 6px 20px rgba(79,70,229,.35); transition:.08s transform,.15s filter; white-space:nowrap; }
+    button:hover{ filter:brightness(1.08); } button:active{ transform:translateY(1px) scale(.99); }
     button[disabled]{ filter:grayscale(.5) brightness(.7); cursor:not-allowed; }
-    .out {
-      font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      text-align:left; white-space:pre-wrap; background:#0c1116; color:#cbe4ff;
-      padding:14px; border-radius:12px; max-height:40vh; overflow:auto;
-      border:1px solid rgba(255,255,255,.06);
-    }
+    .status { display:flex; align-items:center; gap:10px; }
+    .dot { width:10px; height:10px; border-radius:50%; background:#9aa7ff; animation:pulse 1s infinite; }
+    @keyframes pulse { 0%{opacity:.4} 50%{opacity:1} 100%{opacity:.4} }
+    .out { font:12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space:pre-wrap; background:#0c1116; color:#cbe4ff; padding:12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.06); max-height:36vh; overflow:auto; }
+    .hidden { display:none; }
+    /* Contenedor 16:9 responsive para YouTube */
+    .yt-wrap { position:relative; width:100%; padding-top:56.25%; border-radius:14px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.08); background:#0c1116; }
+    .yt-wrap iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
   </style>
 </head>
 <body>
   <main class="card">
-    <h1>Probar n8n con parámetro</h1>
-    <p>Escribí una palabra y presioná “Test Workflow”.</p>
+    <h1>Generar y mostrar en YouTube</h1>
+    <p>Escribí una palabra y presioná “Test Workflow”. Cuando el workflow termine, se embeberá el video de YouTube.</p>
 
     <div class="row">
       <input id="term" type="text" placeholder="p. ej. canguro" autocomplete="off" />
       <button id="btn" type="button">Test Workflow</button>
     </div>
 
+    <div class="status hidden" id="statusBox">
+      <div class="dot"></div>
+      <div id="statusMsg">Generando tu video…</div>
+    </div>
+
+    <div id="ytBox" class="hidden">
+      <div class="yt-wrap">
+        <iframe id="ytFrame"
+          src=""
+          title="YouTube video player"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin">
+        </iframe>
+      </div>
+      <p id="ytLinkP" class="hidden" style="margin:8px 0 0; opacity:.85">
+        Si el embed no carga, abrilo en YouTube:
+        <a id="ytLink" href="#" target="_blank" rel="noopener">ver en YouTube</a>
+      </p>
+    </div>
+
     <div id="out" class="out" aria-live="polite">Listo para disparar…</div>
   </main>
 
   <script>
-    const WEBHOOK_URL = "https://trusting-splendid-gannet.ngrok.app/webhook-test/test-workflow-123abc"; // <— reemplazar
+    // === CONFIG ===
+    const START_WEBHOOK_URL  = "https://trusting-splendid-gannet.ngrok.app/webhook-test/test-workflow-123abc";   // <-- reemplazar
+    const STATUS_WEBHOOK_URL = "https://TU-DOMINIO-N8N/webhook/status";  // <-- reemplazar
+    const POLL_INTERVAL_MS   = 7000;     // 7s
+    const POLL_TIMEOUT_MS    = 25*60*1000; // 25 min
 
-    function sanitize(s){
-      // limpieza mínima para evitar espacios raros
-      return (s || "").replace(/\s+/g, " ").trim().slice(0, 200);
+    const $ = (id)=>document.getElementById(id);
+    function sanitize(s){ return (s||"").replace(/\s+/g," ").trim().slice(0,200); }
+    function setLoading(on,msg="Generando tu video…"){
+      const box=$("statusBox"), m=$("statusMsg");
+      if(on){ m.textContent=msg; box.classList.remove("hidden"); }
+      else { box.classList.add("hidden"); }
+    }
+    function msg(t){ $("out").textContent=t; }
+    function resetUI(){
+      setLoading(false);
+      $("ytBox").classList.add("hidden");
+      $("ytFrame").src="";
+      $("ytLinkP").classList.add("hidden");
+      $("ytLink").href="#";
     }
 
-    async function runWorkflow() {
-      const btn = document.getElementById('btn');
-      const out = document.getElementById('out');
-      const term = sanitize(document.getElementById('term').value);
-
-      if (!term) {
-        out.textContent = 'Ingresá una palabra antes de ejecutar.';
-        return;
-      }
-
-      btn.disabled = true;
-      out.textContent = 'Disparando workflow…';
-
+    // Extrae el videoId de distintas formas de URL (watch, youtu.be, shorts)
+    function parseYouTubeId(url){
       try {
-        const res = await fetch(WEBHOOK_URL, {
-          method: 'POST',
-          mode: 'cors',
-          cache: 'no-store',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            source: 'github-pages',
-            term,                         // <— tu parámetro
-            timestamp: new Date().toISOString()
-          })
+        const u = new URL(url);
+        if (u.hostname.endsWith("youtu.be")) {
+          // https://youtu.be/VIDEOID
+          return u.pathname.slice(1);
+        }
+        if (u.searchParams.get("v")) {
+          // https://www.youtube.com/watch?v=VIDEOID
+          return u.searchParams.get("v");
+        }
+        const paths = u.pathname.split("/").filter(Boolean);
+        // https://www.youtube.com/shorts/VIDEOID
+        const shortsIdx = paths.indexOf("shorts");
+        if (shortsIdx >= 0 && paths[shortsIdx+1]) return paths[shortsIdx+1];
+        // https://www.youtube.com/embed/VIDEOID
+        const embedIdx = paths.indexOf("embed");
+        if (embedIdx >= 0 && paths[embedIdx+1]) return paths[embedIdx+1];
+        return null;
+      } catch { return null; }
+    }
+
+    function showYouTube(url){
+      const id = parseYouTubeId(url);
+      const embed = id
+        ? `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1`
+        : "";
+      if (embed) {
+        $("ytFrame").src = embed;
+        $("ytBox").classList.remove("hidden");
+      }
+      // link de respaldo
+      $("ytLink").href = url;
+      $("ytLinkP").classList.remove("hidden");
+    }
+
+    let pollTimer=null, pollStartAt=null, jobId=null;
+
+    async function startJob(){
+      resetUI();
+      const term = sanitize($("term").value);
+      if(!term) return msg("Ingresá una palabra antes de ejecutar.");
+
+      $("btn").disabled=true;
+      setLoading(true,"Creando tarea…");
+      msg("Creando tarea en n8n…");
+
+      try{
+        const res = await fetch(START_WEBHOOK_URL,{
+          method:"POST", mode:"cors", cache:"no-store",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ source:"github-pages", term })
         });
+        const isJson=(res.headers.get("content-type")||"").includes("application/json");
+        const payload = isJson? await res.json(): await res.text();
+        if(!res.ok) throw new Error(typeof payload==="string"? payload: JSON.stringify(payload));
 
-        const isJson = (res.headers.get('content-type') || '').includes('application/json');
-        const payload = isJson ? await res.json() : await res.text();
-
-        if (!res.ok) throw new Error(typeof payload === 'string' ? payload : JSON.stringify(payload));
-        out.textContent = 'OK ✅\n\nRespuesta del webhook:\n' +
-          (isJson ? JSON.stringify(payload, null, 2) : payload);
-      } catch (err) {
+        jobId = payload?.job_id;
+        if(!jobId) throw new Error("Respuesta sin job_id");
+        msg(`Tarea creada ✅\njob_id: ${jobId}\nEsperando resultado…`);
+        setLoading(true,"Generando tu video…");
+        startPolling();
+      } catch(err){
         console.error(err);
-        out.textContent = 'Error ❌\n' + (err && err.message ? err.message : String(err));
-      } finally {
-        btn.disabled = false;
+        msg("Error al crear la tarea ❌\n"+(err.message||String(err)));
+        setLoading(false);
+        $("btn").disabled=false;
       }
     }
 
-    document.getElementById('btn').addEventListener('click', runWorkflow);
+    async function pollStatus(){
+      if(!jobId) return stopPolling();
+      if(Date.now()-pollStartAt > POLL_TIMEOUT_MS){
+        stopPolling(); setLoading(false); $("btn").disabled=false;
+        return msg("Tiempo de espera agotado ⏳. Probá de nuevo más tarde.");
+      }
+      try{
+        const url = new URL(STATUS_WEBHOOK_URL);
+        url.searchParams.set("job_id", jobId);
+        const res = await fetch(url, { method:"GET", mode:"cors", cache:"no-store" });
+        const isJson = (res.headers.get("content-type")||"").includes("application/json");
+        const payload = isJson? await res.json(): await res.text();
+        if(!res.ok) throw new Error(typeof payload==="string"? payload: JSON.stringify(payload));
+
+        if(payload.status==="processing" || payload.status==="queued"){
+          setLoading(true, payload.message || "Generando tu video…");
+        } else if (payload.status==="ready" && payload.youtube_url){
+          stopPolling(); setLoading(false); $("btn").disabled=false;
+          msg("Video listo ✅\n"+payload.youtube_url);
+          showYouTube(payload.youtube_url);
+        } else if (payload.status==="error"){
+          stopPolling(); setLoading(false); $("btn").disabled=false;
+          msg("El workflow falló ❌\n"+(payload.error||"Error desconocido"));
+        } else {
+          setLoading(true,"Esperando estado válido…");
+        }
+      } catch(err){
+        console.error(err);
+        setLoading(true,"Conectando… (reintento automático)");
+      }
+    }
+
+    function startPolling(){
+      pollStartAt=Date.now();
+      if(pollTimer) clearInterval(pollTimer);
+      pollTimer=setInterval(pollStatus, POLL_INTERVAL_MS);
+      pollStatus(); // primera inmediata
+    }
+    function stopPolling(){ if(pollTimer){ clearInterval(pollTimer); pollTimer=null; } }
+
+    $("btn").addEventListener("click", startJob);
   </script>
 </body>
 </html>
+
