@@ -231,7 +231,7 @@
       document.querySelector('.embed').style.display = 'none';
 
       try {
-        const response = await fetch('https://trusting-splendid-gannet.ngrok.app/webhook-test/test-workflow-123abc', {
+        const response = await fetch('https://trusting-splendid-gannet.ngrok.app/webhook/test-workflow-123abc', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ term: term })
