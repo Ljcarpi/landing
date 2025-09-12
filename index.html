@@ -171,6 +171,26 @@
         padding: 32px 16px;
       }
     }
+    .test-btn {
+  background: linear-gradient(90deg, #6a5acd, #1e90ff);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.test-btn:hover {
+  background: linear-gradient(90deg, #1e90ff, #6a5acd);
+  transform: translateX(-50%) scale(1.05);
+}
   </style>
 </head>
 <body>
@@ -180,10 +200,7 @@
     <div class="brand">AutoVid Generator</div>
     <div class="brand-subtext">By Vision Arcadia</div>
   </div>
-  <div style="display: flex; align-items: center; gap: 12px;">
-    <a href="test.html" class="pill">Test App</a>
-    <span class="pill">In Alpha</span>
-  </div>
+  <a href="test.html" class="test-btn">Test App</a>
 </header>
 
     <main class="card">
