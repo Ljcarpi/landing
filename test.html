@@ -87,7 +87,7 @@
                 }
 
                 const data = await response.json();
-                const ytUrl = data[0].json.link_yt;
+                const ytUrl = data.link_yt;  // Updated to match new JSON structure { "link_yt": "url" }
 
                 if (!ytUrl) {
                     throw new Error('No se encontró la URL del video en la respuesta.');
