@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>AutoVid Generator</title>
+    <!-- Agrega estilos si los tenías, no se muestran en el HTML original -->
+</head>
+<body>
+    <header>
+        <h1>AutoVid Generator</h1>
+        <p>By Vision Arcadia</p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Generar y mostrar en YouTube</h2>
+            <p>Escribí una palabra y presioná “Test Workflow”. Cuando el workflow termine, se embeberá el video de YouTube.</p>
+            
+            <input type="text" id="wordInput" placeholder="Escribí una palabra...">
+            <button onclick="testWorkflow()">Test Workflow</button>
+        </section>
+
+        <div id="loading" style="display: none;">
+            <p>Generando tu video…</p>
+        </div>
+
+        <div id="embedContainer" style="display: none;">
+            <iframe id="ytEmbed" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+            <p>Si el embed no carga, abrilo en YouTube: <a id="ytLink" href="#" target="_blank">ver en YouTube</a></p>
+        </div>
+
+        <footer>
+            <p>V1.0</p>
+            <p>info@vision-arcadia.store</p>
+        </footer>
+    </main>
+
+    <script>
+        // Define las URLs de los webhooks (reemplaza con tus URLs reales)
+        const prodWebhook = 'https://trusting-splendid-gannet.ngrok.app/webhook/prod-workflow-123abc'; // URL de producción
+        const testWebhook = 'https://trusting-splendid-gannet.ngrok.app/webhook-test/test-workflow-123abc'; // URL de test
+
+        function testWorkflow() {
+            const word = document.getElementById('wordInput').value.trim();
+            if (!word) {
+                alert('Por favor, escribí una palabra.');
+                return;
+            }
+
+            // Mostrar loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('embedContainer').style.display = 'none';
+
+            // Intentar con producción primero
+            tryWebhook(prodWebhook, word, true);
+        }
+
+        function tryWebhook(url, word, isProd) {
+            fetch(url, {
+                method: 'POST', // Asumiendo que es POST; ajusta si es GET u otro
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ word: word }) // Asumiendo que el webhook espera un JSON con 'word'; ajusta según tu n8n
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta: ' + response.status);
+                }
+                return response.json(); // Asumiendo que devuelve JSON
+            })
+            .then(data => {
+                // Asumiendo que el webhook devuelve un objeto con 'videoId' o 'videoUrl' de YouTube
+                // Ajusta según lo que devuelva tu n8n (ej: data.videoId o data.videoUrl)
+                const videoId = data.videoId; // O extrae de data.videoUrl si es una URL completa
+                const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+
+                // Embeber el video
+                document.getElementById('ytEmbed').src = `https://www.youtube.com/embed/${videoId}`;
+                document.getElementById('ytLink').href = videoUrl;
+                document.getElementById('embedContainer').style.display = 'block';
+
+                // Ocultar loading
+                document.getElementById('loading').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (isProd) {
+                    // Si falla producción, probar test
+                    tryWebhook(testWebhook, word, false);
+                } else {
+                    // Si falla test también, mostrar error
+                    alert('Error al generar el video en ambos entornos. Intenta más tarde.');
+                    document.getElementById('loading').style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
