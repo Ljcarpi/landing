@@ -203,108 +203,108 @@
     </footer>
   </div>
 
-  <script>
-    // === Configuración de endpoints ===
-    // PRODUCCIÓN: tomado de tu HTML original
-    const PRODUCTION_WEBHOOK = 'https://trusting-splendid-gannet.ngrok.app/webhook/prod-workflow-123abc';
+ <script>
+  // === Configuración de endpoints ===
+  // PRODUCCIÓN
+  const PRODUCTION_WEBHOOK = 'https://trusting-splendid-gannet.ngrok.app/webhook/prod-workflow-123abc';
+  // TEST: asegurate que coincida con el path real del Webhook en n8n
+  const TEST_WEBHOOK = 'https://trusting-splendid-gannet.ngrok.app/webhook/test-workflow-123abc';
 
-    // TEST: REEMPLAZAR por tu webhook de pruebas
-    const TEST_WEBHOOK = 'https://trusting-splendid-gannet.ngrok.app/webhook-test/prod-workflow-123abc';
-
-    // === Utilidades ===
-    function fetchWithTimeout(resource, options = {}, timeoutMs = 15000) {
-      const controller = new AbortController();
-      const id = setTimeout(() => controller.abort(), timeoutMs);
-      const opts = { ...options, signal: controller.signal };
-      return fetch(resource, opts).finally(() => clearTimeout(id));
-    }
-
-    async function postToWebhook(url, term) {
-      return fetchWithTimeout(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ term })
-      }, 15000); // mismo timeout que antes para mantener UX
-    }
-
-    async function fireWithFallback(term) {
-      const candidates = [
-        { url: PRODUCTION_WEBHOOK, label: 'producción' },
-        { url: TEST_WEBHOOK, label: 'test' }
-      ];
-      let lastError;
-      for (const c of candidates) {
-        if (!c.url || c.url.includes('TU-TEST-NGROK')) continue; // saltar placeholder sin configurar
-        try {
-          const resp = await postToWebhook(c.url, term);
-          if (!resp.ok) throw new Error(`HTTP ${resp.status} en ${c.label}`);
-          const data = await resp.json();
-          console.info(`[AutoVid] Usando webhook de ${c.label}`);
-          return { data, used: c.label };
-        } catch (err) {
-          console.warn(`[AutoVid] Falla en ${c.label}:`, err);
-          lastError = err;
-        }
-      }
-      throw lastError || new Error('No se pudo contactar a ningún webhook');
-    }
-
-    function getYoutubeId(url) {
-      try {
-        const u = new URL(url);
-        if (u.hostname.includes('youtu.be')) {
-          return u.pathname.split('/').filter(Boolean).pop();
-        }
-        if (u.searchParams.has('v')) {
-          return u.searchParams.get('v');
-        }
-        // fallback: último segmento
-        return url.split('/').filter(Boolean).pop();
-      } catch {
-        // si no es URL válida, fallback simple
-        return url.split('/').filter(Boolean).pop();
-      }
-    }
-
-    // === UI handler ===
-    document.getElementById('test-workflow').addEventListener('click', async function() {
-      const term = document.getElementById('term-input').value.trim();
-      if (!term) {
-        alert('Escribí una palabra primero.');
-        return;
-      }
-
-      const loadingEl = document.querySelector('.loading');
-      const embedEl = document.querySelector('.embed');
-      const ytEmbed = document.getElementById('yt-embed');
-      const ytLink = document.getElementById('yt-link');
-
-      loadingEl.style.display = 'block';
-      embedEl.style.display = 'none';
-      ytEmbed.removeAttribute('src'); // limpia embed previo
-
-      try {
-        const { data } = await fireWithFallback(term);
-
-        const ytUrl = data.link_yt;
-        if (!ytUrl) throw new Error('No se encontró la URL del video en la respuesta.');
-
-        // Espera 15s para dar tiempo al procesado de YouTube (misma lógica que tu versión)
-        setTimeout(() => {
-          const videoId = getYoutubeId(ytUrl);
-          ytEmbed.src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`;
-          ytLink.href = ytUrl;
-          ytLink.textContent = 'ver en YouTube';
-
-          loadingEl.style.display = 'none';
-          embedEl.style.display = 'block';
-        }, 15000);
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Hubo un error al generar el video: ' + error.message);
-        loadingEl.style.display = 'none';
-      }
+  // === Utilidades ===
+  // Opción 1: sin timeout (recomendado para responseMode=responseNode)
+  async function postToWebhook(url, term) {
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ term })
     });
-  </script>
+  }
+
+  // Opción 2: si querés timeout, que sea alto (p.ej. 300000 = 5 minutos)
+  // function fetchWithTimeout(resource, options = {}, timeoutMs = 300000) {
+  //   const controller = new AbortController();
+  //   const id = setTimeout(() => controller.abort(), timeoutMs);
+  //   const opts = { ...options, signal: controller.signal };
+  //   return fetch(resource, opts).finally(() => clearTimeout(id));
+  // }
+
+  async function fireWithFallback(term) {
+    const candidates = [
+      { url: PRODUCTION_WEBHOOK, label: 'producción' },
+      { url: TEST_WEBHOOK, label: 'test' }
+    ];
+    let lastError;
+    for (const c of candidates) {
+      if (!c.url) continue;
+      try {
+        const resp = await postToWebhook(c.url, term); // usar fetchWithTimeout(...) si activás Opción 2
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} en ${c.label}`);
+        const data = await resp.json();
+        console.info(`[AutoVid] Usando webhook de ${c.label}`);
+        return { data, used: c.label };
+      } catch (err) {
+        console.warn(`[AutoVid] Falla en ${c.label}:`, err);
+        lastError = err;
+      }
+    }
+    throw lastError || new Error('No se pudo contactar a ningún webhook');
+  }
+
+  function getYoutubeId(url) {
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes('youtu.be')) {
+        return u.pathname.split('/').filter(Boolean).pop();
+      }
+      if (u.searchParams.has('v')) {
+        return u.searchParams.get('v');
+      }
+      // shorts o fallback: último segmento
+      return url.split('/').filter(Boolean).pop();
+    } catch {
+      return url.split('/').filter(Boolean).pop();
+    }
+  }
+
+  // === UI handler ===
+  document.getElementById('test-workflow').addEventListener('click', async function() {
+    const term = document.getElementById('term-input').value.trim();
+    if (!term) {
+      alert('Escribí una palabra primero.');
+      return;
+    }
+
+    const loadingEl = document.querySelector('.loading');
+    const embedEl = document.querySelector('.embed');
+    const ytEmbed = document.getElementById('yt-embed');
+    const ytLink = document.getElementById('yt-link');
+
+    loadingEl.style.display = 'block';
+    embedEl.style.display = 'none';
+    ytEmbed.removeAttribute('src');
+
+    try {
+      const { data } = await fireWithFallback(term);
+
+      const ytUrl = data.link_yt;
+      if (!ytUrl) throw new Error('No se encontró la URL del video en la respuesta.');
+
+      // Dar unos segundos para que YouTube termine el procesado (tu flujo ya hace Wait, esto es extra)
+      setTimeout(() => {
+        const videoId = getYoutubeId(ytUrl);
+        ytEmbed.src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`;
+        ytLink.href = ytUrl;
+        ytLink.textContent = 'ver en YouTube';
+
+        loadingEl.style.display = 'none';
+        embedEl.style.display = 'block';
+      }, 8000);
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Hubo un error al generar el video: ' + (error?.message || error));
+      loadingEl.style.display = 'none';
+    }
+  });
+</script>
 </body>
 </html>
