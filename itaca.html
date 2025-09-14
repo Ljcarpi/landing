@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Academia IA — Cursos de Video con IA</title>
+  <meta name="description" content="Aprendé a generar videos con IA. Cursos básico, avanzado y filtro de cara en vivo. Compra con Stripe, PayPal o Mercado Pago.">
+  <link rel="icon" href="favicon.ico">
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind config (tipografías/colores) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+          colors: {
+            brand: { DEFAULT: '#7c3aed', 50:'#f5f3ff',100:'#ede9fe',200:'#ddd6fe',300:'#c4b5fd',400:'#a78bfa',500:'#8b5cf6',600:'#7c3aed',700:'#6d28d9',800:'#5b21b6',900:'#4c1d95'},
+            accent: { DEFAULT: '#06b6d4' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta property="og:title" content="Academia IA — Cursos de Video con IA">
+  <meta property="og:description" content="3 cursos: Básico, Avanzado y Filtro de Cara en Vivo. Paga con Stripe, PayPal o Mercado Pago.">
+  <meta property="og:image" content="https://TU-DOMINIO/og-image.jpg"> <!-- TODO: reemplazar -->
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- JSON-LD Schema.org: Organization + Course -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"Academia IA",
+    "url":"https://TU-DOMINIO/", 
+    "logo":"https://TU-DOMINIO/logo.png",
+    "sameAs":[ "https://twitter.com/TU_USUARIO", "https://www.instagram.com/TU_USUARIO" ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"ItemList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"item":{"@type":"Course","name":"Generación de Videos con IA — Básico"}},
+      {"@type":"ListItem","position":2,"item":{"@type":"Course","name":"Generación de Videos con IA — Avanzado"}},
+      {"@type":"ListItem","position":3,"item":{"@type":"Course","name":"Filtro de Cara en Vivo"}}
+    ]
+  }
+  </script>
+
+  <style>
+    /* Pequeños detalles visuales extra */
+    .glow { box-shadow: 0 0 40px rgba(124,58,237,.25); }
+    .grad { background: radial-gradient(1200px 600px at 10% -10%, rgba(124,58,237,.25), transparent),
+                         radial-gradient(800px 400px at 90% 10%, rgba(6,182,212,.20), transparent),
+                         linear-gradient(180deg, #0b0d10 0%, #0b0d10 100%); }
+  </style>
+</head>
+<body class="min-h-screen bg-[#0b0d10] text-white font-sans selection:bg-brand/30">
+  <!-- Barra superior -->
+  <header class="sticky top-0 z-40 backdrop-blur bg-black/30 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2">
+        <img src="logo.png" alt="Logo" class="h-8 w-8 rounded-lg ring-1 ring-white/20"> <!-- TODO logo -->
+        <span class="font-extrabold tracking-tight">Academia IA</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#cursos" class="hover:text-brand">Cursos</a>
+        <a href="#requisitos" class="hover:text-brand">Requisitos</a>
+        <a href="#faq" class="hover:text-brand">FAQ</a>
+        <a href="#contacto" class="hover:text-brand">Contacto</a>
+      </nav>
+      <a href="#cursos" class="md:inline-flex hidden px-4 py-2 rounded-xl bg-brand hover:bg-brand/90 font-semibold">Empezar</a>
+      <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg hover:bg-white/10" aria-label="Menu">
+        <!-- ícono -->
+        <svg width="24" height="24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden border-t border-white/10">
+      <div class="px-4 py-2 flex flex-col gap-2 text-sm">
+        <a href="#cursos" class="py-2">Cursos</a>
+        <a href="#requisitos" class="py-2">Requisitos</a>
+        <a href="#faq" class="py-2">FAQ</a>
+        <a href="#contacto" class="py-2">Contacto</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="grad relative">
+    <div class="max-w-7xl mx-auto px-4 py-20 md:py-28 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
+          Creá videos con IA <span class="text-brand">desde cero</span>
+        </h1>
+        <p class="mt-5 text-white/80 text-lg">
+          Domina el flujo completo: prompts, selección de modelos, edición, automatización,
+          y efectos en vivo. Tres rutas de aprendizaje adaptadas a tu hardware.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#cursos" class="px-6 py-3 rounded-xl bg-brand hover:bg-brand/90 font-semibold glow">Ver cursos</a>
+          <a href="#demo" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20">Ver demo</a>
+        </div>
+        <div class="mt-6 text-sm text-white/60">Pagá con Stripe, PayPal o Mercado Pago.</div>
+      </div>
+      <div class="relative">
+        <div class="aspect-video rounded-2xl overflow-hidden ring-1 ring-white/10 glow">
+          <!-- TODO: reemplazar por tu demo -->
+          <video src="demo.mp4" autoplay muted loop playsinline class="w-full h-full object-cover"></video>
+        </div>
+        <div class="absolute -bottom-6 -left-6 hidden md:block bg-white/5 backdrop-blur px-4 py-2 rounded-xl border border-white/10">
+          <span class="text-sm">Actualizado 2025 • +12h de contenido • Certificado</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Beneficios -->
+  <section class="max-w-7xl mx-auto px-4 py-16">
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+        <h3 class="font-bold text-lg">Aprendizaje práctico</h3>
+        <p class="text-white/70 mt-2">Proyectos reales: del prompt al render final, optimizando tiempos y calidad.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+        <h3 class="font-bold text-lg">Para tu hardware</h3>
+        <p class="text-white/70 mt-2">Rutas y presets para GPUs integradas o dedicadas, con benchmarks y alternativas.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+        <h3 class="font-bold text-lg">Automatización</h3>
+        <p class="text-white/70 mt-2">Integraciones con n8n, FFmpeg y APIs para escalar tu producción.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cursos -->
+  <section id="cursos" class="max-w-7xl mx-auto px-4 py-8 md:py-16">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl md:text-4xl font-extrabold">Elegí tu curso</h2>
+      <p class="text-white/70 mt-2">Acceso inmediato, soporte por Discord y actualizaciones incluidas.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Curso 1: Básico -->
+      <article class="p-6 rounded-2xl bg-white/5 border border-white/10 flex flex-col">
+        <div class="text-sm uppercase tracking-wider text-accent font-semibold">Nivel Inicial</div>
+        <h3 class="mt-2 text-2xl font-extrabold">Generación de Videos con IA (Básico)</h3>
+        <p class="text-white/70 mt-2 flex-1">
+          Flujo completo con requisitos mínimos. Herramientas livianas, prompts efectivos y publicación.
+        </p>
+        <ul class="mt-4 space-y-2 text-sm text-white/80">
+          <li>• 5 módulos / 30+ lecciones</li>
+          <li>• Modelos livianos y setups sin GPU dedicada</li>
+          <li>• Proyecto final guiado</li>
+        </ul>
+        <div class="mt-6">
+          <div class="text-3xl font-extrabold">$ <span>TODO</span> <span class="text-white/60 text-base">ARS</span></div>
+          <div class="text-xs text-white/60 mt-1">Precio de lanzamiento • Acceso de por vida</div>
+        </div>
+        <div class="mt-6 grid grid-cols-3 gap-2">
+          <!-- Stripe Payment Link -->
+          <a href="https://buy.stripe.com/test_TODO" target="_blank" rel="nofollow"
+             class="text-center px-3 py-3 rounded-xl bg-brand hover:bg-brand/90 text-sm font-semibold">Stripe</a>
+          <!-- PayPal Hosted Button / Payment Link -->
+          <a href="https://www.paypal.com/ncp/payment/TODO" target="_blank" rel="nofollow"
+             class="text-center px-3 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold">PayPal</a>
+          <!-- Mercado Pago Link de pago -->
+          <a href="https://mpago.la/TODO" target="_blank" rel="nofollow"
+             class="text-center px-3 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold">Mercado Pago</a>
+        </div>
+        <button data-open-modal="basico" class="mt-3 w-full text-xs underline text-white/70 hover:text-white">Ver temario</button>
+      </article>
+
+      <!-- Curso 2: Avanzado -->
+      <article class="p-6 rounded-2xl bg-white/5 border border-brand/40 glow flex flex-col">
+        <div class="text-sm uppercase tracking-wider text-brand font-semibold">Recomendado</div>
+        <h3 class="mt-2 text-2xl font-extrabold">Generación de Videos con IA (Avanzado)</h3>
+        <p class="text-white/70 mt-2 flex-1">
+          Pipelines de alta calidad, control de estilo, aceleración en GPU, y automatizaciones con n8n.
+        </p>
+        <ul class="mt-4 space-y-2 text-sm text-white/80">
+          <li>• 8 módulos / 60+ lecciones</li>
+          <li>• Modelos SDXL/Flux/Video, LoRA/ControlNet</li>
+          <li>• Benchmarks y optimizaciones FFmpeg</li>
+        </ul>
+        <div class="mt-6">
+          <div class="text-3xl font-extrabold">$ <span>TODO</span> <span class="text-white/60 text-base">ARS</span></div>
+          <div class="text-xs text-white/60 mt-1">Incluye plantillas y assets</div>
+        </div>
+        <div class="mt-6 grid grid-cols-3 gap-2">
+          <a href="https://buy.stripe.com/test_TODO" target="_blank" rel="nofollow"
+             class="text-center px-3 py-3 rounded-xl bg-brand hover:bg-brand/90 text-sm font-semibold">Stripe</a>
+          <a href="https://www.paypal.com/ncp/payment/TODO" target="_blank" rel="nofollow"
+             class="text-center px-3 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold">PayPal</a>
+          <a href="https://mpago.la/TODO" target="_blank" rel="nofollow"
+             class="text-center px-3 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold">Mercado Pago</a>
+        </div>
+        <button data-open-modal="avanzado" class="mt-3 w-full text-xs underline text-white/70 hover:text-white">Ver temario</button>
+      </article>
+
+      <!-- Curso 3: Filtro de Cara en Vivo -->
+      <article class="p-6 rounded-2xl bg-white/5 border border-white/10 flex flex-col">
+        <div class="text-sm uppercase tracking-wider text-accent font-semibold">Tiempo real</div>
+        <h3 class="mt-2 text-2xl font-extrabold">Filtro de Cara en Vivo</h3>
+        <p class="text-white/70 mt-2 flex-1">
+          Face tracking y reemplazo facial en vivo para streams, Zoom y OBS. Práctico y seguro.
+        </p>
+        <ul class="mt-4 space-y-2 text-sm text-white/80">
+          <li>• 6 módulos / 40+ lecciones</li>
+          <li>• Integración OBS/VTubing/AR</li>
+          <li>• Buenas prácticas y latencia baja</li>
+        </ul>
+        <div class="mt-6">
+          <div class="text-3xl font-extrabold">$ <span>TODO</span> <span class="text-white/60 text-base">ARS</span></div>
+          <div class="text-xs text-white/60 mt-1">Actualizaciones incluidas</div>
+        </div>
+        <div class="mt-6 grid grid-cols-3 gap-2">
+          <a href="https://buy.stripe.com/test_TODO" target="_blank" rel="nofollow"
+             class="text-center px-3 py-3 rounded-xl bg-brand hover:bg-brand/90 text-sm font-semibold">Stripe</a>
+          <a href="https://www.paypal.com/ncp/payment/TODO" target="_blank" rel="nofollow"
+             class="text-center px-3 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold">PayPal</a>
+          <a href="https://mpago.la/TODO" target="_blank" rel="nofollow"
+             class="text-center px-3 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold">Mercado Pago</a>
+        </div>
+        <button data-open-modal="filtro" class="mt-3 w-full text-xs underline text-white/70 hover:text-white">Ver temario</button>
+      </article>
+    </div>
+  </section>
+
+  <!-- Requisitos -->
+  <section id="requisitos" class="max-w-7xl mx-auto px-4 py-16">
+    <h2 class="text-3xl font-extrabold">Requisitos de hardware</h2>
+    <div class="mt-6 grid md:grid-cols-3 gap-6 text-sm">
+      <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+        <h3 class="font-bold">Básico</h3>
+        <ul class="mt-3 space-y-1 text-white/80">
+          <li>• Windows 10 u 11 / Linux</li>
+          <li>• CPU 4c/8t • 8–12 GB RAM</li>
+          <li>• GPU integrada o 2–4 GB VRAM</li>
+        </ul>
+      </div>
+      <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+        <h3 class="font-bold">Avanzado</h3>
+        <ul class="mt-3 space-y-1 text-white/80">
+          <li>• CPU 6c/12t • 16–32 GB RAM</li>
+          <li>• GPU 8–12+ GB VRAM</li>
+          <li>• 50+ GB libres SSD</li>
+        </ul>
+      </div>
+      <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+        <h3 class="font-bold">Filtro en vivo</h3>
+        <ul class="mt-3 space-y-1 text-white/80">
+          <li>• OBS/Streaming compatible</li>
+          <li>• Webcam 1080p</li>
+          <li>• GPU con NVENC/AMF/VAAPI</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonios (placeholder) -->
+  <section class="max-w-7xl mx-auto px-4 pb-16">
+    <div class="grid md:grid-cols-3 gap-6">
+      <blockquote class="p-6 rounded-2xl bg-white/5 border border-white/10">
+        <p>“Construí mi primer pipeline de video con IA sin GPU dedicada.”</p>
+        <footer class="mt-3 text-white/60 text-sm">— A., Editor</footer>
+      </blockquote>
+      <blockquote class="p-6 rounded-2xl bg-white/5 border border-white/10">
+        <p>“El curso avanzado me ahorró horas por render y automatiza todo con n8n.”</p>
+        <footer class="mt-3 text-white/60 text-sm">— M., Creador</footer>
+      </blockquote>
+      <blockquote class="p-6 rounded-2xl bg-white/5 border border-white/10">
+        <p>“El filtro en vivo se ve profesional y corre con baja latencia.”</p>
+        <footer class="mt-3 text-white/60 text-sm">— L., Streamer</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- Captura de email -->
+  <section id="demo" class="max-w-3xl mx-auto px-4 pb-16">
+    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+      <h3 class="text-xl font-bold">Recibí una clase gratuita</h3>
+      <p class="text-white/70 mt-1">Te enviamos un adelanto y descuentos.</p>
+      <form id="leadForm" class="mt-4 grid md:grid-cols-[1fr_auto] gap-3">
+        <input type="email" name="email" required placeholder="tu@email.com"
+               class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/15 focus:outline-none focus:ring-2 focus:ring-brand" />
+        <button class="px-6 py-3 rounded-xl bg-brand hover:bg-brand/90 font-semibold">Quiero la clase</button>
+      </form>
+      <p id="leadMsg" class="mt-3 text-sm text-white/70 hidden">¡Listo! Revisá tu bandeja.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="max-w-5xl mx-auto px-4 pb-16">
+    <h2 class="text-3xl font-extrabold">Preguntas frecuentes</h2>
+    <div class="mt-6 space-y-4">
+      <details class="p-4 rounded-xl bg-white/5 border border-white/10">
+        <summary class="font-semibold cursor-pointer">¿Cuándo tengo acceso?</summary>
+        <p class="mt-2 text-white/70">Inmediato tras el pago. Recibís un email con tus credenciales y el temario.</p>
+      </details>
+      <details class="p-4 rounded-xl bg-white/5 border border-white/10">
+        <summary class="font-semibold cursor-pointer">¿Hay garantía?</summary>
+        <p class="mt-2 text-white/70">Sí, 7 días. Si no te sirve, te devolvemos el dinero. <span class="text-white/50">(Aplican términos.)</span></p>
+      </details>
+      <details class="p-4 rounded-xl bg-white/5 border border-white/10">
+        <summary class="font-semibold cursor-pointer">¿Certificado?</summary>
+        <p class="mt-2 text-white/70">Emitimos certificado de finalización verificable.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Contacto / Footer -->
+  <footer id="contacto" class="border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-6">
+      <div>
+        <h4 class="font-bold">Academia IA</h4>
+        <p class="text-white/70 text-sm mt-2">Cursos prácticos de video con IA para todos los niveles.</p>
+      </div>
+      <div>
+        <h4 class="font-bold">Contacto</h4>
+        <p class="text-white/70 text-sm mt-2">Email: <a class="underline" href="mailto:soporte@TU-DOMINIO">soporte@TU-DOMINIO</a></p>
+      </div>
+      <div>
+        <h4 class="font-bold">Legal</h4>
+        <p class="text-white/70 text-sm mt-2"><a href="terminos.html" class="underline">Términos</a> · <a href="privacidad.html" class="underline">Privacidad</a></p>
+      </div>
+    </div>
+    <div class="text-center text-white/50 text-xs pb-8">© <span id="year"></span> Academia IA. Todos los derechos reservados.</div>
+  </footer>
+
+  <!-- Modales de temario -->
+  <div id="modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4">
+    <div class="max-w-xl w-full bg-[#0f1115] border border-white/10 rounded-2xl p-6">
+      <div class="flex items-center justify-between">
+        <h4 id="modalTitle" class="font-extrabold text-xl">Temario</h4>
+        <button id="closeModal" class="p-2 hover:bg-white/10 rounded-lg" aria-label="Cerrar">
+          <svg width="20" height="20" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-width="2" d="M6 6l8 8M14 6l-8 8"/></svg>
+        </button>
+      </div>
+      <div id="modalBody" class="mt-4 text-white/80 text-sm leading-relaxed">
+        <!-- Se rellena vía JS -->
+      </div>
+      <div class="mt-6 text-right">
+        <button id="modalCTA" class="px-4 py-2 rounded-xl bg-brand hover:bg-brand/90 font-semibold">Comprar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast éxito/cancel -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 hidden">
+    <div class="px-4 py-3 rounded-xl bg-white/10 border border-white/15 backdrop-blur">
+      <span id="toastMsg" class="text-sm"></span>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Año dinámico
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Menú móvil
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+
+    // Lead form (usa Formspree/StaticForms/Google Forms – reemplazar URL)
+    const leadForm = document.getElementById('leadForm');
+    leadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = e.target.email.value;
+      try {
+        // TODO: Reemplazar por tu endpoint (Formspree sugerido)
+        const endpoint = "https://formspree.io/f/TODO";
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+        if (res.ok) {
+          document.getElementById('leadMsg').classList.remove('hidden');
+          e.target.reset();
+        } else {
+          alert("No pudimos registrar tu email. Probá nuevamente.");
+        }
+      } catch {
+        alert("Error de red. Verificá tu conexión.");
+      }
+    });
+
+    // Modales de temario
+    const temarios = {
+      basico: {
+        title: "Temario — Curso Básico",
+        body: `
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Fundamentos de IA generativa para video</li>
+            <li>Modelos livianos y render en CPU/GPU integrada</li>
+            <li>Prompts, estilos y guion técnico</li>
+            <li>Edición esencial con FFmpeg</li>
+            <li>Publicación y workflow simple</li>
+          </ul>`,
+        link: "https://buy.stripe.com/test_TODO" // TODO
+      },
+      avanzado: {
+        title: "Temario — Curso Avanzado",
+        body: `
+          <ul class="list-disc pl-5 space-y-1">
+            <li>SDXL/Flux/ControlNet/LoRA</li>
+            <li>Text-to-video y upscaling avanzado</li>
+            <li>Pipelines con n8n y automatización</li>
+            <li>Optimización GPU y calidad de compresión</li>
+            <li>Proyecto end-to-end + assets</li>
+          </ul>`,
+        link: "https://buy.stripe.com/test_TODO" // TODO
+      },
+      filtro: {
+        title: "Temario — Filtro de Cara en Vivo",
+        body: `
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Face tracking y mapeo</li>
+            <li>Integración con OBS/VTubing</li>
+            <li>Latencia baja y performance</li>
+            <li>Buenas prácticas y seguridad</li>
+            <li>Setup para streaming</li>
+          </ul>`,
+        link: "https://buy.stripe.com/test_TODO" // TODO
+      }
+    };
+
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalCTA  = document.getElementById('modalCTA');
+    document.querySelectorAll('[data-open-modal]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-open-modal');
+        const data = temarios[key];
+        modalTitle.textContent = data.title;
+        modalBody.innerHTML = data.body;
+        modalCTA.onclick = () => window.open(data.link, "_blank");
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+    });
+    document.getElementById('closeModal').addEventListener('click', () => {
+      modal.classList.add('hidden'); modal.classList.remove('flex');
+    });
+    modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); } });
+
+    // Toast helper
+    function showToast(msg, ms=3500){
+      const toast = document.getElementById('toast');
+      const msgEl = document.getElementById('toastMsg');
+      msgEl.textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(()=> toast.classList.add('hidden'), ms);
+    }
+
+    // Manejo de ?success o ?canceled desde payment links (Stripe/MP/PayPal)
+    const params = new URLSearchParams(location.search);
+    if (params.get('success') === '1') showToast('¡Pago exitoso! Te enviamos acceso por email.');
+    if (params.get('canceled') === '1') showToast('Pago cancelado. Podés reintentar cuando quieras.');
+
+    // (Opcional) Google Analytics / gtag — reemplazar ID
+    // window.dataLayer = window.dataLayer || [];
+    // function gtag(){dataLayer.push(arguments);}
+    // gtag('js', new Date()); gtag('config', 'G-XXXXX');
+  </script>
+</body>
+</html>
