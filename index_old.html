@@ -1,13 +1,48 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
   <meta charset="utf-8" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AutoVid Generator — Coming Soon</title>
-  <meta name="description" content="AutoVid Generator automates the creation of personalized videos with AI, integrating Google Sheets, Gemini, Pexels, and FFmpeg. Sign up for the beta!" />
+
+  <title>AutoVid Generator — AI Video Startup (Coming Soon)</title>
+  <meta name="description" content="AutoVid Generator is an emerging startup that hosts and refines text-to-video AI models and delivers personalized user experiences through automated video editing with FFmpeg. Powered by AI models, Google APIs, Gemini, FFmpeg, and more." />
+  <link rel="canonical" href="https://vision-arcadia.store/" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AutoVid Generator — AI Video Startup (Coming Soon)">
+  <meta property="og:description" content="Emerging startup: hosting & refining text-to-video AI models + automated video editing via FFmpeg. Powered by AI models, Google APIs, Gemini, FFmpeg, and more.">
+  <meta property="og:url" content="https://vision-arcadia.store/">
+  <meta property="og:image" content="https://vision-arcadia.store/og-image.jpg">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AutoVid Generator — AI Video Startup (Coming Soon)">
+  <meta name="twitter:description" content="Hosting & refining text-to-video AI models with automated FFmpeg editing. Uses AI models, Google APIs, Gemini, FFmpeg, and more.">
+  <meta name="twitter:image" content="https://vision-arcadia.store/og-image.jpg">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"Vision Arcadia",
+    "url":"https://vision-arcadia.store/",
+    "brand":"AutoVid Generator",
+    "description":"Emerging startup hosting and refining text-to-video AI models to power personalized, automated video creation with FFmpeg.",
+    "logo":"https://vision-arcadia.store/favicon.ico",
+    "email":"info@vision-arcadia.store",
+    "foundingDate":"2025-01-01",
+    "sameAs":[]
+  }
+  </script>
+
   <style>
     :root {
       --bg: #0b0d10;
@@ -17,238 +52,178 @@
       --acc: #52a8ff;
       --disabled: #4b5a6e;
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Inter, system-ui, Segoe UI, sans-serif;
       background: linear-gradient(180deg, #0b0d10, #0e141a);
       color: var(--fg);
     }
-    .wrap {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 64px 24px;
-    }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 64px 24px; }
+
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 56px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 56px; position: relative;
     }
-    header .brand {
-      font-weight: 800;
-      font-size: 28px;
-      letter-spacing: 0.5px;
+    .brand { font-weight: 800; font-size: 28px; letter-spacing: .5px;
       background: linear-gradient(90deg, var(--acc), #7bbcff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
     }
-    .brand-container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+    .brand-container { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+    .brand-subtext { font-size: 14px; color: var(--muted); }
+
+    .startup-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #0b6dd6; color: white; border-radius: 999px;
+      padding: 8px 14px; font-size: 12px; font-weight: 700; letter-spacing: .4px;
     }
-    .brand-subtext {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--muted);
-      margin-top: 4px;
-    }
+    .startup-badge svg { width: 14px; height: 14px; }
+
     .card {
-      background: var(--card);
-      border: 1px solid #1c232b;
-      border-radius: 24px;
-      padding: 40px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
+      background: var(--card); border: 1px solid #1c232b; border-radius: 24px;
+      padding: 40px; box-shadow: 0 12px 40px rgba(0,0,0,.3); transition: transform .3s ease;
     }
-    .card:hover {
-      transform: translateY(-5px);
-    }
-    h1 {
-      margin: 0 0 16px;
-      font-size: 40px;
-      font-weight: 800;
-      line-height: 1.2;
-    }
-    h3 {
-      font-size: 20px;
-      font-weight: 600;
-      margin: 0 0 12px;
-    }
-    p {
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 16px;
-    }
-    .grid {
-      display: grid;
-      gap: 24px;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      margin-top: 32px;
-    }
+    .card:hover { transform: translateY(-5px); }
+
+    h1 { margin: 0 0 16px; font-size: 40px; font-weight: 800; line-height: 1.2; }
+    h3 { font-size: 20px; font-weight: 600; margin: 0 0 12px; }
+    p { color: var(--muted); line-height: 1.7; font-size: 16px; }
+
+    .grid { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); margin-top: 32px; }
+
     .pill {
-      display: inline-block;
-      background: #0b6dd6;
-      color: white;
-      border-radius: 999px;
-      padding: 8px 16px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+      display: inline-block; background: #0b6dd6; color: #fff;
+      border-radius: 999px; padding: 8px 16px; font-size: 13px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
     }
+
     .cta {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      background: var(--disabled);
-      color: #8ea0b8;
-      border: 0;
-      border-radius: 12px;
-      padding: 16px 24px;
-      font-weight: 700;
-      font-size: 16px;
-      text-decoration: none;
-      margin-top: 24px;
+      display: inline-flex; flex-direction: column; align-items: center; gap: 6px;
+      background: var(--disabled); color: #8ea0b8; border: 0; border-radius: 12px;
+      padding: 16px 24px; font-weight: 700; font-size: 16px; text-decoration: none; margin-top: 24px;
       cursor: not-allowed;
     }
-    .cta span {
-      font-size: 12px;
-      font-weight: 400;
-      color: #9fb0c3;
-    }
-    footer {
-      margin-top: 48px;
-      color: #73839a;
-      font-size: 13px;
-      text-align: center;
-    }
-    .privacy-policy {
-      margin-top: 16px;
-      color: #73839a;
-      font-size: 12px;
-      line-height: 1.6;
-      text-align: center;
-    }
-    .privacy-policy a {
-      color: #73839a;
-      text-decoration: none;
-    }
-    .muted {
-      color: #8ea0b8;
-    }
-    .section {
-      margin-top: 32px;
-    }
-    .kpis {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-    .kpi {
-      background: #0f141a;
-      border: 1px solid #1c232b;
-      border-radius: 12px;
-      padding: 14px 18px;
-      color: #c9d7e6;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    @media (max-width: 520px) {
-      h1 {
-        font-size: 32px;
-      }
-      .card {
-        padding: 24px;
-      }
-      .wrap {
-        padding: 32px 16px;
-      }
-    }
-    .test-btn {
-  background: linear-gradient(90deg, #6a5acd, #1e90ff);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-weight: 700;
-  text-decoration: none;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-}
+    .cta span { font-size: 12px; font-weight: 400; color: #9fb0c3; }
 
-.test-btn:hover {
-  background: linear-gradient(90deg, #1e90ff, #6a5acd);
-  transform: translateX(-50%) scale(1.05);
-}
+    footer { margin-top: 48px; color: #73839a; font-size: 13px; text-align: center; }
+    .privacy-policy { margin-top: 16px; color: #73839a; font-size: 12px; line-height: 1.6; text-align: center; }
+    .privacy-policy a { color: #73839a; text-decoration: none; }
+    .muted { color: #8ea0b8; }
+    .section { margin-top: 32px; }
+
+    .kpis { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 16px; }
+    .kpi { background: #0f141a; border: 1px solid #1c232b; border-radius: 12px; padding: 14px 18px; color: #c9d7e6; font-size: 14px; font-weight: 600; }
+
+    @media (max-width:520px){
+      h1 { font-size: 32px; }
+      .card { padding: 24px; }
+      .wrap { padding: 32px 16px; }
+    }
+
+    .test-btn {
+      background: linear-gradient(90deg, #6a5acd, #1e90ff);
+      color: white; padding: 12px 24px; border-radius: 30px; font-weight: 700;
+      text-decoration: none; font-size: 16px; transition: all .3s ease;
+      box-shadow: 0 6px 16px rgba(0,0,0,.3);
+      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    }
+    .test-btn:hover { background: linear-gradient(90deg, #1e90ff, #6a5acd); transform: translateX(-50%) scale(1.05); }
   </style>
 </head>
 <body>
   <div class="wrap">
-<header>
-  <div class="brand-container">
-    <div class="brand">AutoVid Generator</div>
-    <div class="brand-subtext">By Vision Arcadia</div>
-  </div>
-  <a href="test.html" class="test-btn">Test App</a>
-</header>
+    <header>
+      <div class="brand-container" aria-label="Brand">
+        <div class="brand">AutoVid Generator</div>
+        <div class="brand-subtext">By Vision Arcadia</div>
+        <span class="startup-badge" title="AI Video Startup">
+          <!-- spark icon -->
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2z" stroke="currentColor" stroke-width="1.5"/></svg>
+          AI Video Startup
+        </span>
+      </div>
+      <a href="test.html" class="test-btn" aria-label="Open Test App">Test App</a>
+    </header>
 
     <main class="card">
-      <h1>Create personalized videos in minutes with automation</h1>
-      <p class="muted">AutoVid Generator transforms your data into dynamic videos using <strong>Google Sheets</strong>, <strong>Gemini</strong>, <strong>Pexels</strong>, and <strong>FFmpeg</strong>, simplifying content creation and unleashing your creativity.</p>
+      <p class="pill" aria-label="Application note">Applying to Google for Startups</p>
+
+      <h1>Host & refine text-to-video AI with automated editing</h1>
+      <p class="muted">
+        <strong>AutoVid Generator</strong> is an <strong>emerging startup</strong> focused on hosting and refining <strong>text-to-video AI models</strong>
+        and delivering a <strong>personalized user experience</strong> through an automated <strong>FFmpeg</strong>-driven editing pipeline.
+        We integrate <strong>AI models</strong> (unspecified), <strong>Google APIs</strong>, <strong>Gemini</strong>, <strong>FFmpeg</strong>, and more.
+      </p>
 
       <div class="section">
         <h3>The problem we solve</h3>
-        <p>Manual video creation is slow, requires advanced technical skills, and can limit creativity. Current tools are complex, expensive, or do not allow large-scale automated personalization.</p>
+        <p>
+          Video creation at scale is slow, fragmented, and hard to personalize across channels. Teams frequently stitch together ad-hoc scripts,
+          inconsistent post-processing, and manual timelines—leading to brittle pipelines, unpredictable quality, and missed deadlines.
+          Beyond generation, organizations also need deterministic editing, templating, and metadata-driven personalization (e.g., captions, overlays,
+          audio ducking, aspect-ratio variants) with auditability and repeatable outputs for production use.
+        </p>
       </div>
 
-      <div class="section grid">
-        <div>
+      <div class="section grid" role="list">
+        <div role="listitem">
           <h3>Our solution (MVP)</h3>
-          <p>AutoVid Generator automates video creation: it pulls data from Google Sheets, generates content with AI (Gemini, DeepL), produces text-to-speech audio, sources visuals from Pexels, and processes videos with FFmpeg for professional results.</p>
+          <p>
+            We are building a <strong>centralized platform</strong> for AI video <strong>generation</strong> and <strong>automated editing</strong>.
+            It orchestrates prompt intake, model outputs, and an <strong>FFmpeg</strong>-based compositing engine—applying policy-aware templates,
+            text/audio overlays, and multi-format renders—then delivers assets through connectors (storage/CDN, social, and more).
+            Bring your own models via APIs or providers; our focus is the <em>production pipeline</em>, not model hosting.
+          </p>
         </div>
-        <div>
+        <div role="listitem">
           <h3>Current status</h3>
-          <p>We are in the alpha phase, developing the core logic. The closed beta will launch in Q1 2026. Sign up to receive updates on our progress.</p>
+          <p>We are in <strong>alpha</strong> building core orchestration and media pipelines. A <strong>closed beta</strong> is planned for <strong>Q1 2026</strong>. Subscribe to get updates.</p>
         </div>
-        <div>
-          <h3>Our team</h3>
-          <p>A team passionate about automation and AI, with expertise in workflows (n8n), API integration, and multimedia production.</p>
+        <div role="listitem">
+          <h3>About Us</h3>
+          <p>
+            Vision Arcadia is an emerging project looking to develop and integrate AI models with a robust automation layer for video generation and
+            editing. Our goal is to deliver a reliable, scalable, and developer-friendly experience that turns creative intent into production-ready
+            outputs.
+          </p>
         </div>
       </div>
 
-      <div class="kpis">
+      <div class="kpis" aria-label="Key metrics">
         <div class="kpi">Beta: <strong>Early registration closed</strong></div>
         <div class="kpi">Time savings: <strong>~90%</strong></div>
-        <div class="kpi">Integrations: <strong>Sheets, Gemini, Pexels, FFmpeg + more</strong></div>
+        <div class="kpi">Stack: <strong>AI Models, Google APIs, Gemini, FFmpeg + more</strong></div>
       </div>
 
-      <a class="cta" href="#" disabled>Join the beta <span>Coming Soon</span></a>
+      <!-- Accessible disabled CTA -->
+      <a class="cta" href="#" role="button" aria-disabled="true">Join the beta <span>Coming Soon</span></a>
 
       <div class="section">
-        <p class="muted">© <span id="y"></span> Vision Arcaida — All rights reserved.</p>
+        <h3>About the Startup</h3>
+        <p class="muted">
+          Vision Arcadia powers AutoVid Generator with a focus on <strong>AI-driven video applications</strong>.
+          Our mission is to enable anyone to produce hundreds of high-impact, personalized video variations in minutes—not days.
+        </p>
+      </div>
+
+      <div class="section">
+        <p class="muted">© <span id="y"></span> Vision Arcadia — All rights reserved.</p>
       </div>
     </main>
 
     <footer>
-      <div><a href="mailto:info@vision-arcadia.store" style="color: #73839a; text-decoration: none;">info@vision-arcadia.store</a></div>
+      <div><a href="mailto:info@vision-arcadia.store" style="color:#73839a;text-decoration:none;">info@vision-arcadia.store</a></div>
     </footer>
 
     <div class="privacy-policy">
-      <p>Privacy Policy: At Vision Arcaida, we protect your personal data. We only collect information provided voluntarily (such as emails for the beta) and do not share it with third parties. Contact us at <a href="mailto:info@vision-arcadia.store">info@vision-arcadia.store</a> for more details.</p>
+      <p>
+        <strong>Privacy Policy:</strong> We collect only the information you voluntarily provide (e.g., an email for beta access) and we do not sell your data. To request access or deletion, write to
+        <a href="mailto:info@vision-arcadia.store">info@vision-arcadia.store</a>.
+      </p>
     </div>
   </div>
 
-  <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
