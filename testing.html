@@ -8,6 +8,26 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+
+  <!-- ─── Security headers as <meta> (mejor como headers del server; aquí en meta para GitHub Pages) ─── -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' https: data:;
+    frame-src https://www.youtube.com;
+    connect-src 'self';
+    base-uri 'self';
+    form-action 'none';
+    object-src 'none';
+    frame-ancestors 'self';
+    upgrade-insecure-requests;
+  ">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
   <style>
     :root{
       --bg:#080a0f; --bg2:#0d1220; --fg:#eaf1fa; --muted:#a1b1c6; --card:#121826; --border:#1e2a3a;
@@ -85,14 +105,6 @@
       h1{font-size:26px}
       .lang-switch{top:-44px}
     }
-
-    /* Botón Home (volver a inicio) */
-    #back-home{
-      position:absolute; left:0; top:-36px; text-decoration:none;
-    }
-    @media (max-width:520px){
-      #back-home{ top:-44px; }
-    }
   </style>
 </head>
 <body>
@@ -102,9 +114,6 @@
         <div class="brand">AutoVid Generator</div>
         <div class="brand-sub" data-i18n="brand.by">By Vision Arcadia</div>
       </div>
-
-      <!-- Botón Home -->
-      <a href="index.html" class="btn secondary" id="back-home" data-i18n="nav.home">← Home</a>
 
       <!-- EN | ES -->
       <nav class="lang-switch" aria-label="Language switch">
@@ -155,7 +164,7 @@
         </div>
       </div>
 
-      <p style="margin-top:12px;color:#8ea0b8">V1.4 (proxy)</p>
+      <p style="margin-top:12px;color:#8ea0b8">V1.4 (proxy + CSP)</p>
     </main>
 
     <footer>
@@ -177,8 +186,7 @@
         "cta.test":"Test Workflow",
         "cta.retry":"Retry video",
         "loading":"Generating your video…",
-        "open.youtube":"Open on YouTube",
-        "nav.home":"← Home"
+        "open.youtube":"Open on YouTube"
       },
       es:{
         "meta.title":"AutoVid Generator — Testeo de workflow",
@@ -191,8 +199,7 @@
         "cta.test":"Test Workflow",
         "cta.retry":"Reintentar video",
         "loading":"Generando tu video…",
-        "open.youtube":"Abrir en YouTube",
-        "nav.home":"← Inicio"
+        "open.youtube":"Abrir en YouTube"
       }
     };
 
@@ -223,30 +230,41 @@
         const q = (p.get('lang') || '').toLowerCase();
         if (q === 'en' || q === 'es') qs = q;
       } catch(_) {}
+
       let stored = null;
       try { stored = localStorage.getItem('site_lang'); } catch(_) {}
+
       let auto = 'en';
       try {
         const nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
         auto = nav.startsWith('es') ? 'es' : 'en';
       } catch(_) {}
+
       const lang = qs || (stored === 'en' || stored === 'es' ? stored : null) || auto;
       applyI18n(lang);
     })();
 
-    // ================== App logic (PROXY) ==================
-    // Nuevo: un solo endpoint proxied por Cloudflare Worker
-    const API_PROXY = '/api/fire'; // vive bajo TU dominio
+    // ================== App logic (via proxy) ==================
+    // Endpoint de tu Cloudflare Worker ruteado bajo tu dominio
+    const API_PROXY = '/api/fire';
 
-    async function fireViaProxy(term, mode='test'){
+    // Sanitización/recorte ligero en cliente (la validación real también está en el Worker)
+    function sanitizeTerm(raw){
+      let t = (raw || '').toString().trim().slice(0,80);
+      // letras/números/espacios y ,.-_
+      t = t.replace(/[^\p{L}\p{N}\s,\.\-_]/gu, '');
+      return t;
+    }
+
+    async function fireWorkflow(term, mode='test'){ // mode: 'test' | 'prod'
       const resp = await fetch(API_PROXY, {
         method:'POST',
         headers:{ 'Content-Type':'application/json' },
         body: JSON.stringify({ term, mode })
       });
       if(!resp.ok){
-        const err = await resp.text();
-        throw new Error(`Proxy HTTP ${resp.status}: ${err}`);
+        const txt = await resp.text();
+        throw new Error(`HTTP ${resp.status} — ${txt}`);
       }
       return resp.json();
     }
@@ -272,15 +290,10 @@
     let lastVideoId = null;
     let lastYtUrl   = null;
 
-    // Trigger workflow (modo "test" por defecto)
+    // Trigger workflow
     document.getElementById('test-workflow').addEventListener('click', async ()=>{
-      const raw = document.getElementById('term-input').value;
-      let term = (raw || '').trim();
-
-      // Pequeña validación cliente (el Worker también valida)
-      if (term.length > 80) term = term.slice(0, 80);
-      term = term.replace(/[^\p{L}\p{N}\s,\.\-_]/gu, '');
-
+      const termRaw = document.getElementById('term-input').value;
+      const term = sanitizeTerm(termRaw);
       if(!term){
         const m = (document.documentElement.lang==='es')
           ? 'Escribe una palabra primero.' : 'Please type a word first.';
@@ -293,14 +306,16 @@
       lastVideoId = null; lastYtUrl = null;
 
       try{
-        const data = await fireViaProxy(term, 'test');  // <-- cambia a 'prod' si querés
+        // Cambia a 'prod' si quieres forzar el flujo de producción
+        const data = await fireWorkflow(term, 'test');
+
         const ytUrl = data.link_yt;
         if(!ytUrl) throw new Error('Missing YouTube URL in response');
 
         lastYtUrl = ytUrl;
         lastVideoId = getYoutubeId(ytUrl);
 
-        // Delay por propagación de YouTube (4s)
+        // Pequeño delay extra (si YouTube tarda en habilitar el embed)
         setTimeout(()=>{
           ytEmbed.src = `https://www.youtube.com/embed/${lastVideoId}?rel=0&autoplay=1&cb=${Date.now()}`;
           ytLink.href = ytUrl;
@@ -317,7 +332,7 @@
       }
     });
 
-    // Retry video: remonta el mismo embed
+    // Retry video: vuelve a montar el mismo embed, con cache-buster y opción de espera
     retryBtn.addEventListener('click', ()=>{
       if(!lastVideoId && lastYtUrl){
         lastVideoId = getYoutubeId(lastYtUrl);
